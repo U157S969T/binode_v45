@@ -116,7 +116,9 @@
     // Clear messages and show new greeting
     const messages = document.getElementById('chat-messages');
     messages.innerHTML = '';
-    appendMessage('binod', char.greeting);
+    appendMessage(key, char.greeting);
+    // Update input placeholder
+    input.placeholder = key === 'beatrice' ? 'Ask Beatrice...' : 'Ask Binod...';
   }
 
   /* ── Character dropdown toggle ── */
@@ -187,7 +189,7 @@
     el.id = 'binod-typing';
     el.className = 'flex flex-col items-start';
     el.innerHTML = `
-      <span class="text-[9px] text-gray-600 mb-1.5 uppercase tracking-widest font-medium">Binod</span>
+      <span class="text-[9px] text-gray-600 mb-1.5 uppercase tracking-widest font-medium">${characters[activeCharacter].name}</span>
       <div class="flex gap-1 items-center py-1">
         <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
         <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
@@ -224,16 +226,19 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       removeTyping();
-      appendMessage('binod', data.response);
+      appendMessage(activeCharacter, data.response);
 
-      // Update conversation history so Binod remembers context
+      // Update conversation history for context memory
       conversationHistory.push({ role: 'user', content: message });
       conversationHistory.push({ role: 'assistant', content: data.response });
 
     } catch (err) {
       removeTyping();
-      appendMessage('binod', 'Arre yaar, kuch technical gadbad ho gayi! Thodi der baad try karo. 😅');
-      console.error('Binod API error:', err);
+      const errorMsg = activeCharacter === 'beatrice'
+        ? 'I seem to have encountered a small technical issue. Please bear with me — or feel free to try again in a moment.'
+        : 'Arre yaar, kuch technical gadbad ho gayi! Thodi der baad try karo. 😅';
+      appendMessage(activeCharacter, errorMsg);
+      console.error('Chat API error:', err);
     }
   });
 </script>
