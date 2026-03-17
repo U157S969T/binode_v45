@@ -173,11 +173,13 @@
   /* ── Format response text ── */
   function formatText(text) {
     return text
-      .replace(/\*\*/g, '')         // remove bold markers
-      .replace(/\*/g, '')           // remove italic markers
-      .replace(/\u2014/g, ',')      // em-dash to comma
-      .replace(/ - /g, ', ')        // spaced hyphen used as em-dash
-      .replace(/\n/g, '<br>');      // newlines as line breaks
+      .replace(/\*\*/g, '')                 // remove bold markers
+      .replace(/\*/g, '')                   // remove italic markers
+      .replace(/\s*\u2014\s*/g, ', ')       // em-dash + surrounding spaces to comma-space
+      .replace(/\s*\u2013\s*/g, ', ')       // en-dash too
+      .replace(/,\s*,/g, ',')               // remove double commas
+      .replace(/ ,/g, ',')                  // remove space before comma
+      .replace(/\n/g, '<br>');              // newlines as line breaks
   }
 
   /* ── Append a chat bubble ── */
