@@ -170,11 +170,13 @@
     sendBtn.disabled = input.value.trim() === '';
   });
 
-  /* ── Format response text — strip asterisks, render line breaks ── */
+  /* ── Format response text ── */
   function formatText(text) {
     return text
       .replace(/\*\*/g, '')         // remove bold markers
       .replace(/\*/g, '')           // remove italic markers
+      .replace(/\u2014/g, ',')      // em-dash to comma
+      .replace(/ - /g, ', ')        // spaced hyphen used as em-dash
       .replace(/\n/g, '<br>');      // newlines as line breaks
   }
 
