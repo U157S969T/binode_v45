@@ -42,6 +42,13 @@
   const WELCOME_URL = 'https://binod-bot-backend--nihalxai.replit.app/api/welcome';
 
   // Fetch time-aware welcome message on load
+  function cleanText(t) {
+    return t
+      .replace(/\*\*/g, '').replace(/\*/g, '')
+      .replace(/\s*\u2014\s*/g, ', ').replace(/\s*\u2013\s*/g, ', ')
+      .replace(/ ,/g, ',').replace(/\n/g, '<br>');
+  }
+
   (async () => {
     try {
       const res = await fetch(WELCOME_URL);
@@ -53,7 +60,7 @@
         wrapper.className = 'flex flex-col items-start';
         wrapper.innerHTML = `
           <span class="text-[9px] text-gray-600 mb-1.5 uppercase tracking-widest font-medium">Binod</span>
-          <div class="text-sm leading-relaxed text-gray-300">${data.message}</div>`;
+          <div class="text-sm leading-relaxed text-gray-300">${cleanText(data.message)}</div>`;
         msgBox.appendChild(wrapper);
       }
     } catch (e) { /* keep static fallback greeting if fetch fails */ }
@@ -120,7 +127,7 @@
       try {
         const res  = await fetch(WELCOME_URL + '?character=' + key);
         const data = await res.json();
-        appendMessage(key, data.message || char.greeting);
+        appendMessage(key, cleanText(data.message || char.greeting));
       } catch (e) {
         appendMessage(key, char.greeting);
       }
